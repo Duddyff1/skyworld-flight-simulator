@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SkyWorld — Flight Operations</title>
+  <meta name="description" content="SkyWorld browser flight simulator and airline operations experience.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="SkyWorld home">
+        <span class="brand-mark">✈</span><span><b>SKYWORLD</b><small>FLIGHT OPERATIONS</small></span>
+      </a>
+      <div class="side-label">FLIGHT DECK</div>
+      <button class="nav-item active" data-page="overview"><span>▦</span> Overview</button>
+      <button class="nav-item" data-page="simulator"><span>◉</span> Flight simulator</button>
+      <button class="nav-item" data-page="flights"><span>⇄</span> Flight planner</button>
+      <button class="nav-item" data-page="fleet"><span>✈</span> Fleet</button>
+      <button class="nav-item" data-page="airports"><span>⌖</span> Airports</button>
+      <div class="side-spacer"></div>
+      <div class="weather-mini">
+        <div class="weather-icon">☀</div><div><strong id="sideWeather">22° C</strong><small>Clear skies · VFR</small></div>
+      </div>
+      <div class="sidebar-bottom"><span class="status-dot"></span> Systems operational <span class="version">v1.0</span></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="breadcrumb"><span>Operations</span><b>/</b><strong id="pageCrumb">Overview</strong></div>
+        <div class="top-actions"><span class="live-pill"><i></i> SIMULATION ONLINE</span><button class="icon-btn" id="fullscreenBtn" title="Toggle fullscreen">⛶</button><div class="avatar">SW</div></div>
+      </header>
+
+      <section class="page active" id="page-overview">
+        <div class="welcome-row"><div><div class="eyebrow">MONDAY · FLIGHT OPERATIONS CENTER</div><h1>Good day, Captain.</h1><p class="muted">Your flight deck is ready. Where are we flying today?</p></div><button class="primary-btn" data-goto="flights">＋ Plan a flight</button></div>
+        <div class="hero-card">
+          <div class="hero-content"><div class="eyebrow light">FEATURED ROUTE · SW 204</div><h2>Chase the horizon.</h2><p>Take the controls, climb above the clouds, and explore a world of flight. Your next adventure is cleared for departure.</p><button class="hero-btn" data-goto="simulator">Enter flight simulator <span>↗</span></button></div>
+          <div class="hero-plane">✈</div><div class="hero-route"><span>KLAX</span><i></i><span>KSEA</span></div>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-top"><span>Available aircraft</span><span class="stat-icon blue">✈</span></div><strong>04</strong><small>Ready for departure</small></div>
+          <div class="stat-card"><div class="stat-top"><span>Destinations</span><span class="stat-icon purple">⌖</span></div><strong>12</strong><small>Across 3 regions</small></div>
+          <div class="stat-card"><div class="stat-top"><span>Flight hours</span><span class="stat-icon green">◷</span></div><strong id="hoursStat">00.0</strong><small>Your simulated logbook</small></div>
+          <div class="stat-card"><div class="stat-top"><span>Flight status</span><span class="stat-icon orange">↗</span></div><strong class="ready-text">READY</strong><small>All systems nominal</small></div>
+        </div>
+        <div class="section-heading"><div><h2>Quick departure</h2><p class="muted">Choose a route and get airborne in seconds.</p></div><button class="text-btn" data-goto="flights">View flight planner →</button></div>
+        <div class="route-grid">
+          <button class="route-card" data-route="KLAX-KSFO"><div class="route-photo photo-coast"><span class="route-tag">45 MIN · SHORT HAUL</span></div><div class="route-info"><div><b>Los Angeles</b><small>KLAX · California</small></div><span class="route-arrow">↗</span></div><div class="route-dest">San Francisco <span>KSFO</span></div></button>
+          <button class="route-card" data-route="KJFK-KBOS"><div class="route-photo photo-city"><span class="route-tag">55 MIN · SHORT HAUL</span></div><div class="route-info"><div><b>New York</b><small>KJFK · New York</small></div><span class="route-arrow">↗</span></div><div class="route-dest">Boston <span>KBOS</span></div></button>
+          <button class="route-card" data-route="KLAX-KSEA"><div class="route-photo photo-mountain"><span class="route-tag">2 HR · REGIONAL</span></div><div class="route-info"><div><b>Los Angeles</b><small>KLAX · California</small></div><span class="route-arrow">↗</span></div><div class="route-dest">Seattle <span>KSEA</span></div></button>
+        </div>
+      </section>
+
+      <section class="page" id="page-simulator">
+        <div class="page-title-row"><div><div class="eyebrow">LIVE SIMULATION</div><h1>Flight simulator</h1><p class="muted">A lightweight browser flight experience. Use the controls to steer, climb, and descend.</p></div><div class="sim-status"><i></i><span id="simState">ON STANDBY</span></div></div>
+        <div class="sim-layout">
+          <div class="sim-main">
+            <div class="sim-screen">
+              <canvas id="flightCanvas" aria-label="Flight simulator view"></canvas>
+              <div class="sim-overlay top-left"><span class="hud-label">ALTITUDE</span><b id="hudAlt">0000</b><small>FT</small></div>
+              <div class="sim-overlay top-right"><span class="hud-label">AIRSPEED</span><b id="hudSpeed">000</b><small>KTS</small></div>
+              <div class="sim-overlay bottom-left"><span class="hud-label">HEADING</span><b id="hudHeading">270°</b></div>
+              <div class="sim-overlay bottom-right"><span class="hud-label">THROTTLE</span><b id="hudThrottle">35%</b></div>
+              <div class="center-reticle">＋</div>
+              <div class="sim-start" id="simStartOverlay"><div class="start-circle">▶</div><h3>Ready for takeoff?</h3><p>Start your engines and begin your flight.</p><button class="primary-btn" id="startFlightBtn">Start flight</button></div>
+              <div class="sim-toast" id="simToast"></div>
+            </div>
+            <div class="sim-controls">
+              <div class="control-group"><label for="throttle">THROTTLE <b id="throttleLabel">35%</b></label><input id="throttle" type="range" min="0" max="100" value="35"></div>
+              <div class="control-group"><label for="pitch">PITCH <b id="pitchLabel">0°</b></label><input id="pitch" type="range" min="-12" max="12" value="0"></div>
+              <div class="control-group"><label for="bank">BANK <b id="bankLabel">0°</b></label><input id="bank" type="range" min="-35" max="35" value="0"></div>
+            </div>
+            <div class="keyboard-hint"><span>⌨ KEYBOARD CONTROLS</span><kbd>W</kbd><kbd>S</kbd> pitch <kbd>A</kbd><kbd>D</kbd> bank <kbd>↑</kbd><kbd>↓</kbd> throttle <span class="hint-end">Press Space to pause</span></div>
+          </div>
+          <aside class="flight-panel">
+            <div class="panel-head"><div><h3>Flight instruments</h3><p>Live telemetry</p></div><span class="panel-live">LIVE</span></div>
+            <div class="instrument"><div class="instrument-head"><span>Vertical speed</span><b id="vspeed">0 ft/min</b></div><div class="meter"><span id="vspeedBar" style="width:50%"></span></div></div>
+            <div class="instrument"><div class="instrument-head"><span>Fuel remaining</span><b id="fuelLabel">100%</b></div><div class="meter fuel-meter"><span id="fuelBar" style="width:100%"></span></div></div>
+            <div class="instrument"><div class="instrument-head"><span>Flight time</span><b id="flightTime">00:00</b></div><div class="instrument-note">Elapsed time in this session</div></div>
+            <div class="instrument"><div class="instrument-head"><span>Aircraft</span><b id="simAircraft">A320</b></div><div class="instrument-note" id="simRoute">KLAX → KSEA</div></div>
+            <div class="checklist"><h4>Pre-flight checklist</h4><label><input type="checkbox" checked> Battery and avionics</label><label><input type="checkbox" checked> Flight controls</label><label><input type="checkbox"> Taxi and runway clearance</label><label><input type="checkbox"> Landing gear</label><button class="secondary-btn" id="checklistBtn">Complete checklist</button></div>
+            <button class="danger-btn" id="endFlightBtn">End flight</button>
+          </aside>
+        </div>
+      </section>
+
+      <section class="page" id="page-flights">
+        <div class="page-title-row"><div><div class="eyebrow">ROUTE MANAGEMENT</div><h1>Flight planner</h1><p class="muted">Build a route, choose your aircraft, and launch the simulation.</p></div></div>
+        <div class="planner-grid">
+          <div class="panel planner-panel"><div class="panel-head"><div><h3>Plan your route</h3><p>Choose your departure and arrival airports.</p></div><span class="panel-icon">⇄</span></div>
+            <label class="field-label" for="departure">DEPARTURE AIRPORT</label><select id="departure"><option value="KLAX">Los Angeles International (KLAX)</option><option value="KSFO">San Francisco International (KSFO)</option><option value="KJFK">John F. Kennedy International (KJFK)</option><option value="KSEA">Seattle–Tacoma International (KSEA)</option><option value="KBOS">Boston Logan International (KBOS)</option><option value="KDEN">Denver International (KDEN)</option><option value="KORD">Chicago O'Hare (KORD)</option><option value="KMIA">Miami International (KMIA)</option></select>
+            <div class="swap-row"><span class="line"></span><button id="swapAirports" title="Swap airports">⇅</button><span class="line"></span></div>
+            <label class="field-label" for="arrival">ARRIVAL AIRPORT</label><select id="arrival"><option value="KSEA">Seattle–Tacoma International (KSEA)</option><option value="KSFO">San Francisco International (KSFO)</option><option value="KJFK">John F. Kennedy International (KJFK)</option><option value="KLAX">Los Angeles International (KLAX)</option><option value="KBOS">Boston Logan International (KBOS)</option><option value="KDEN">Denver International (KDEN)</option><option value="KORD">Chicago O'Hare (KORD)</option><option value="KMIA">Miami International (KMIA)</option></select>
+            <label class="field-label" for="aircraftSelect">AIRCRAFT</label><select id="aircraftSelect"><option value="A320">Airbus A320 — Passenger jet</option><option value="B737">Boeing 737 — Passenger jet</option><option value="C172">Cessna 172 — Light aircraft</option><option value="B787">Boeing 787 — Long haul</option></select>
+            <label class="field-label" for="weatherSelect">WEATHER CONDITIONS</label><select id="weatherSelect"><option value="clear">Clear skies</option><option value="cloudy">Scattered clouds</option><option value="sunset">Golden-hour sunset</option><option value="storm">Stormy weather (visual)</option></select>
+            <button class="primary-btn full-btn" id="launchRoute">Launch flight simulation ↗</button>
+          </div>
+          <div class="route-preview"><div class="map-grid"></div><div class="map-label label-a" id="mapFrom">LOS ANGELES <b>KLAX</b></div><div class="map-label label-b" id="mapTo">SEATTLE <b>KSEA</b></div><svg class="route-line" viewBox="0 0 500 330" preserveAspectRatio="none"><path d="M 70 240 Q 230 20 420 95" fill="none" stroke="#65b8ff" stroke-width="2.5" stroke-dasharray="7 8"/><circle cx="70" cy="240" r="6" fill="#fff" stroke="#65b8ff" stroke-width="3"/><circle cx="420" cy="95" r="6" fill="#fff" stroke="#65b8ff" stroke-width="3"/><text x="238" y="126" fill="#b9dfff" font-size="18">✈</text></svg><div class="map-bottom"><div><small>EST. FLIGHT TIME</small><b id="routeDuration">2h 05m</b></div><div><small>DISTANCE</small><b id="routeDistance">954 NM</b></div><div><small>CRUISE ALTITUDE</small><b>FL350</b></div></div></div>
+        </div>
+        <div class="section-heading"><div><h2>Popular routes</h2><p class="muted">One click to configure a flight.</p></div></div>
+        <div class="popular-list">
+          <button data-route="KLAX-KSFO"><span class="popular-icon">✈</span><span><b>West Coast hop</b><small>KLAX → KSFO · 45 min</small></span><span class="popular-distance">293 NM</span><span>↗</span></button>
+          <button data-route="KJFK-KBOS"><span class="popular-icon">✈</span><span><b>Northeast express</b><small>KJFK → KBOS · 55 min</small></span><span class="popular-distance">162 NM</span><span>↗</span></button>
+          <button data-route="KDEN-KORD"><span class="popular-icon">✈</span><span><b>Mountain to Midwest</b><small>KDEN → KORD · 2h 10m</small></span><span class="popular-distance">888 NM</span><span>↗</span></button>
+        </div>
+      </section>
+
+      <section class="page" id="page-fleet">
+        <div class="page-title-row"><div><div class="eyebrow">AIRCRAFT MANAGEMENT</div><h1>Our fleet</h1><p class="muted">Choose your aircraft for your next virtual flight.</p></div></div>
+        <div class="fleet-grid">
+          <article class="fleet-card featured"><div class="fleet-image airbus-image"><span>SKYWORLD FLEET</span><b>01 / 04</b></div><div class="fleet-body"><div class="fleet-title"><h3>Airbus A320</h3><span class="fleet-badge">POPULAR</span></div><p>Efficient single-aisle passenger aircraft built for short and medium-haul routes.</p><div class="fleet-specs"><span><small>CRUISE</small><b>447 kts</b></span><span><small>RANGE</small><b>3,300 NM</b></span><span><small>CAPACITY</small><b>180 seats</b></span></div><button class="secondary-btn choose-aircraft" data-aircraft="A320">Select aircraft</button></div></article>
+          <article class="fleet-card"><div class="fleet-image boeing-image"><span>SKYWORLD FLEET</span><b>02 / 04</b></div><div class="fleet-body"><div class="fleet-title"><h3>Boeing 737</h3></div><p>A reliable narrow-body jet for regional and domestic journeys.</p><div class="fleet-specs"><span><small>CRUISE</small><b>453 kts</b></span><span><small>RANGE</small><b>3,500 NM</b></span><span><small>CAPACITY</small><b>189 seats</b></span></div><button class="secondary-btn choose-aircraft" data-aircraft="B737">Select aircraft</button></div></article>
+          <article class="fleet-card"><div class="fleet-image cessna-image"><span>SKYWORLD FLEET</span><b>03 / 04</b></div><div class="fleet-body"><div class="fleet-title"><h3>Cessna 172</h3></div><p>A light aircraft ideal for learning basic flight controls and low-altitude sightseeing.</p><div class="fleet-specs"><span><small>CRUISE</small><b>122 kts</b></span><span><small>RANGE</small><b>640 NM</b></span><span><small>CAPACITY</small><b>4 seats</b></span></div><button class="secondary-btn choose-aircraft" data-aircraft="C172">Select aircraft</button></div></article>
+          <article class="fleet-card"><div class="fleet-image dreamliner-image"><span>SKYWORLD FLEET</span><b>04 / 04</b></div><div class="fleet-body"><div class="fleet-title"><h3>Boeing 787</h3></div><p>A modern wide-body aircraft designed for long-haul international travel.</p><div class="fleet-specs"><span><small>CRUISE</small><b>488 kts</b></span><span><small>RANGE</small><b>7,300 NM</b></span><span><small>CAPACITY</small><b>296 seats</b></span></div><button class="secondary-btn choose-aircraft" data-aircraft="B787">Select aircraft</button></div></article>
+        </div>
+      </section>
+
+      <section class="page" id="page-airports">
+        <div class="page-title-row"><div><div class="eyebrow">GLOBAL NETWORK</div><h1>Airport directory</h1><p class="muted">Explore departure points across the United States.</p></div><div class="search-box">⌕ <input id="airportSearch" placeholder="Search airports..." aria-label="Search airports"></div></div>
+        <div class="airport-grid" id="airportGrid"></div>
+      </section>
+
+      <footer class="footer"><span>© 2026 SKYWORLD SIMULATION</span><span>Built for virtual flight · Not a real airline</span><span>ALL SYSTEMS NOMINAL <i></i></span></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="script.js"></script>
+</body>
+</html>
